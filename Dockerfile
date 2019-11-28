@@ -1,17 +1,21 @@
-        # A dockerfile must always start by importing the base image.
-	# We use the keyword 'FROM' to do that.
-	# In our example, we want import the python image.
-	# So we write 'python' for the image name and 'latest' for the version.
-	FROM python:latest
+# Use an official Python runtime as a parent image
+FROM python:2.7-slim
 
-	# In order to launch our python code, we must import it into our image.
-	# We use the keyword 'COPY' to do that.
-	# The first parameter 'main.py' is the name of the file on the host.
-	# The second parameter '/' is the path where to put the file on the image.
-	# Here we put the file at the image root folder.
-	COPY main.py /
+# Set the working directory to /app
+WORKDIR /app
 
-	# We need to define the command to launch when we are going to run the image.
-	# We use the keyword 'CMD' to do that.
-	# The following command will execute "python ./main.py".
-	CMD [ "python", "./main.py" ]
+# Copy the current directory contents into the container at /app
+ADD . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
+CMD ["python", "app.py"]
+
